@@ -1,5 +1,3 @@
-// var currentIndex;
-// var currentSlider;
 var sitePath, contentPath = '';
 var SITE_LOCATION = document.location;
 if (SITE_LOCATION.pathname.indexOf('ybj-open') == 1) {
@@ -16,36 +14,24 @@ function qUrl(key) {
   return ((uri.match(re)) ? (uri.match(re)[0].substr(key.length + 1)) : null);
 }
 
-$('.pop-close').on('click', function () {
-  $('.poplayer, .popcontent').hide();
-})
-$('#Jpop').on('click', function () {
-  $('.poplayer, .popcontent').show();
-})
 
-$('.swiper-arrow').on('click', function () {
-  mySwiper.slideNext();
-})
-
-// 图片加载完成后再执行swiper
+/*图片加载完后执行其他事件
+  copy from https://stackoverflow.com/questions/8682085/can-i-sync-up-multiple-image-onload-calls
+*/
 function loader(items, thingToDo, allDone) {
   if (!items) {
     return;
   }
-
   if ("undefined" === items.length) {
     items = [items];
   }
-
   var count = items.length;
-
   var thingToDoCompleted = function (items, i) {
     count--;
     if (0 == count) {
       allDone(items);
     }
   };
-
   for (var i = 0; i < items.length; i++) {
     thingToDo(items, i, thingToDoCompleted);
   }
@@ -60,12 +46,13 @@ function loadImage(items, i, onComplete) {
   img.addEventListener("load", onLoad, false);
   img.src = items[i];
 }
-
+//items 是存放图片的SRC字符串格式的数组,这里遍历所有
 var items = [];
 $.each($('img'), function (indexInArray, valueOfElement) {
   items.push($(this).attr('src'));
 });
 
+// 图片加载完成后再执行swiper
 loader(items, loadImage, function () {
   // console.log("done");
   $('#loading').remove();
@@ -90,8 +77,6 @@ loader(items, loadImage, function () {
         }
       }
     }
-    // initialSlide: 2,
-
   });
   mySwiper.on('slideChangeTransitionStart', function () {
     // console.log(this.touches.diff);
@@ -168,11 +153,16 @@ loader(items, loadImage, function () {
         }
       });
     }
-
   })
-
-
-  // mySwiper.on('touchMove ', function() {
-  //   console.log(this.touches.diff);
-  // })
+  $('.swiper-arrow').on('click', function () {
+    mySwiper.slideNext();
+  })
 });
+
+
+$('.pop-close').on('click', function () {
+  $('.poplayer, .popcontent').hide();
+})
+$('#Jpop').on('click', function () {
+  $('.poplayer, .popcontent').show();
+})
